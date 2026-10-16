@@ -1,0 +1,192 @@
+/* Reset total de bordes y márgenes */
+
+@import url('https://fonts.cdnfonts.com/css/open-sauce-one');
+
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body,
+#root {
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+.header-container {
+    width: 100%;
+    background-color: #f7fafc;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 1000;
+}
+
+.top-bar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #f7fafc;
+    color: #000000;
+    position: relative;
+    align-items: center;
+
+}
+
+
+
+.top-bar span {
+    color: #000000;
+    margin-left: 600px;
+    font-size: 21px;
+
+}
+
+.logo-box {
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s ease;
+}
+
+.top-items-menu {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 0;
+    flex-direction: row-reverse;
+
+}
+
+.logo-box.menu-abierto {
+    transform: translateX(140px);
+}
+
+.logo-img {
+    display: flex;
+    align-items: center;
+    position: relative;
+    height: 60px;
+    object-fit: contain;
+}
+
+.hamburger-btn {
+    position: relative;
+    background: none;
+    border: none;
+    color: #000000;
+    font-size: 30px;
+    transition: transform 0.2s ease;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    line-height: 1;
+    margin-right: 10px;
+
+}
+
+
+.hamburger-btn:hover {
+    transform: scale(1.1);
+}
+
+
+.menu-desplegable {
+    position: fixed;
+    align-items: stretch;
+    top: 0;
+    left: 0;
+    background-color: #4dc3eb;
+    display: flex;
+    width: 190px;
+    height: 100vh;
+    padding: 20px;
+    border-top: 1px solid #333;
+    z-index: 2000;
+    padding: 10px 2px 0 2px;
+    flex-direction: column;
+    animation: deslizarEntrada 0.25s ease-out forwards;
+}
+
+
+@keyframes deslizarEntrada {
+    from {
+        transform: translateX(-100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+
+.close-btn {
+    border: none;
+    background: none;
+    color: #ffffff;
+    font-size: 22px;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+}
+
+.menu-header-img img {
+    cursor: pointer;
+    margin-top: 0;
+    max-height: 60px;
+    object-fit: contain;
+
+}
+
+.menu-links {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    /* Espacio entre columnas*/
+    gap: 5px;
+}
+
+
+
+.menu-links a {
+    color: #ffffff;
+    cursor: url('../assets/icono_cursor.png') 16 16, auto;
+    white-space: nowrap;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 20px;
+    align-items: center;
+    gap: 5px;
+    width: 100%;
+    font-family: 'Open Sauce One', sans-serif;
+    padding: 12px 20px;
+    border-radius: 25px;
+    transition: background-color 0.2s ease;
+
+}
+
+.link-icono {
+    width: 25px;
+    height: 25px;
+    flex-shrink: 0;
+    /* stroke heredan el color actual del texto <a> */
+    stroke: currentColor;
+    stroke-width: 2;
+    /* Grosor de la línea */
+}
+
+
+
+.menu-links a:hover {
+    background-color: #bdeccf;
+    color: #000000;
+}

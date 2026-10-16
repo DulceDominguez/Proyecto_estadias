@@ -1,0 +1,33 @@
+# =========================
+# FRONTEND (React / Vite)
+# =========================
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# Dependencias y builds
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+*.local
+
+# =========================
+# BACKEND (Python)
+# =========================
+backend/venv/
+backend/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# =========================
+# Entornos y Editores
+# =========================
+.env
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.sw?

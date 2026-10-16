@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 500" preserveAspectRatio="none">
+  <!-- Capa superior/posterior (con transparencia para crear el efecto de dos tonos) -->
+  <path fill="#b5ecff" fill-opacity="0.55" d="M0,0 C480,210 960,370 1440,460 L1440,500 L0,500 Z"></path>
+  
+  <!-- Capa principal/inferior -->
+  <path fill="#b5ecff" d="M0,110 C480,280 960,420 1440,500 L1440,500 L0,500 Z"></path>
+</svg>

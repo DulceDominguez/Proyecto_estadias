@@ -1,0 +1,129 @@
+@import url('https://fonts.cdnfonts.com/css/open-sauce-one');
+
+
+body {
+    background-color: #f7fafc;
+    font-family: 'Open Sauce One', sans-serif;
+}
+
+.titulo {
+    font-size: 35px;
+    margin-bottom: 14px;
+    color: black;
+}
+
+.subtitulo {
+    font-size: 22px;
+    color: black;
+}
+
+
+.dashboard div {
+    overflow: hidden;
+    min-height: 147px;
+    max-height: 147px;
+    width: 100%;
+    color: #000;
+    max-width: 147px;
+    border: 1px solid #000;
+    border-radius: 30px;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+    background-color: #ffffff;
+}
+
+.dashboard {
+    font-size: 17px;
+    margin-top: 22px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 100px;
+}
+
+.text_pendientes {
+    font-size: 17px;
+    white-space: nowrap;
+
+}
+
+.agenda_img {
+    max-width: none;
+    height: auto;
+    transform: scale(1.3);
+}
+
+
+.dashboard img {
+    margin-top: 10px;
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+}
+
+.info p {
+    white-space: nowrap;
+    font-size: 18px;
+    color: black;
+
+}
+
+.rows {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+}
+
+.info {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+
+}
+
+.user_info {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    /* stroke heredan el color actual del texto <a> */
+    color: black;
+    stroke-width: 2;
+    /* Grosor de la línea */
+}
+
+.descripcion {
+    white-space: nowrap;
+    font-size: 18px;
+    color: black;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 800px;
+    margin: 27px auto 6px auto;
+    padding: 0 10px;
+}
+
+.descripcion a {
+    color: #a43b3b;
+}
+
+.pacientes_agenda {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.contenedor_rows {
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    min-height: 57px;
+    width: 100%;
+    max-width: 800px;
+    background-color: white;
+    border: 1px solid #000;
+    border-radius: 15px;
+}

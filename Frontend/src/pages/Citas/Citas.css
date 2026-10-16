@@ -1,0 +1,239 @@
+.citas-container {
+    padding: 30px;
+    background-color: #f7fafc;
+    min-height: 100vh;
+    width: 100%;
+    font-family: sans-serif;
+    margin: 0 auto;
+}
+
+.citas-container-new {
+    padding: 30px;
+    background-color: #f7fafc;
+    min-height: 490px;
+    width: 70%;
+    font-family: sans-serif;
+    margin: 0 auto;
+
+}
+
+
+
+.citas-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.citas-title {
+    margin: 0;
+    font-size: 24px;
+    color: #1a1a1a;
+}
+
+.citas-fecha {
+    color: #666;
+    font-size: 14px;
+}
+
+.citas-subsections {
+    width: 63%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 25px;
+}
+
+.citas-subsections h3 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: normal;
+    color: #333;
+}
+
+.btn-agendar {
+    background-color: #a43b3b;
+    color: white;
+    border: 1px solid #ccc;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 17px;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.btn-agendar:hover {
+    background-color: #f9f9f9;
+}
+
+.cita_acciones {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+
+}
+
+.btn-editar {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    color: rgb(0, 0, 0);
+    background-color: #c6e2ee;
+}
+
+.citas-lista {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+    width: 65%;
+    margin: 0 auto;
+}
+
+
+.cita-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    border: 1px solid #e0e0e0;
+    border-radius: 16px;
+    background-color: #fff;
+}
+
+.cita-hora {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    min-width: 60px;
+}
+
+.cita-info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    margin-left: 20px;
+}
+
+.cita-paciente {
+    font-weight: bold;
+    font-size: 15px;
+    color: #222;
+}
+
+.cita-tratamiento {
+    font-size: 13px;
+    color: #666;
+    margin-top: 2px;
+}
+
+.cita-estatus {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+}
+
+.cita-estatus.confirmada {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+.cita-estatus.pendiente {
+    background-color: #fff3cd;
+    color: #664d03;
+}
+
+/* Estilos para el formulario de Nueva Cita */
+.form-card {
+    background-color: #f3f4f4;
+    border-radius: 16px;
+    padding: 24px;
+}
+
+.form-title {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 20px;
+    color: #1a1a1a;
+}
+
+.form-grid {
+    grid-column: span 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.full-width {
+    grid-column: span 2;
+
+}
+
+
+
+.form-field {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.date {
+    width: 100%;
+}
+
+.form-field label {
+    font-size: 16px;
+    display: flex;
+    justify-content: start;
+    color: #333;
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+    padding: 14px 16px;
+    border: 1px solid #000000;
+    border-radius: 16px;
+    font-size: 16px;
+    outline: none;
+    background-color: #fff;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.btn-cancelar {
+    padding: 10px 24px;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    background-color: #fff;
+    cursor: pointer;
+    font-size: 17px;
+}
+
+.btn-guardar {
+    padding: 10px 24px;
+    border: none;
+    border-radius: 12px;
+    background-color: #71091d;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    width: 100%;
+}

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" preserveAspectRatio="none">
+  <!-- Capa trasera azul claro -->
+  <path fill="#7dd6fb" d="M 0,400 C 150,380 280,200 400,0 L 400,400 Z" />
+  <!-- Capa principal azul Ortholife -->
+  <path fill="#5bc8f5" d="M 50,400 C 200,350 320,250 400,80 L 400,400 Z" />
+</svg>

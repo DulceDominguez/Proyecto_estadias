@@ -1,0 +1,208 @@
+.detalle-paciente-container {
+    padding: 20px;
+}
+
+.detalle-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.detalle-titulo h2 {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+    color: #1a1a1a;
+}
+
+.detalle-fecha {
+    font-size: 14px;
+    color: #666;
+}
+
+.btn-volver-lista {
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn-volver-lista:hover {
+    background-color: #f0f0f0;
+}
+
+/* Recuadro de la información del paciente */
+.paciente-card-info {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 20px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn_volver {
+    margin-left: 880px;
+}
+
+.paciente-avatar-section {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.avatar-circle {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background-color: #e0e8ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 32px;
+}
+
+.paciente-datos-basicos h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 0 6px 0;
+    color: #000000;
+}
+
+.dato-item {
+    font-size: 14px;
+    color: #444;
+    margin: 3px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Estilo del botón Editar */
+.btn-editar-paciente {
+    background-color: #4eb5e5;
+    /* Azul celeste acorde a la app */
+    color: #ffffff;
+    border: none;
+    padding: 8px 22px;
+    border-radius: 18px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.btn-editar-paciente:hover {
+    opacity: 0.9;
+}
+
+.dp-card-info {
+    margin: 0 auto;
+    background-color: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 20px;
+    width: 65%;
+    padding: 20px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.dp-avatar-section {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.dp-avatar-circle {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background-color: #e0e8ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+}
+
+.dp-btn-editar {
+    background-color: #4eb5e5;
+    color: #ffffff;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.dp-btn-editar:hover {
+    opacity: 0.9;
+}
+
+.dp-tabs-container {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin: 25px 0;
+}
+
+.dp-tab-btn {
+    background-color: #ffffff;
+    border: 1px solid #d0d7de;
+    padding: 8px 24px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #222;
+    cursor: pointer;
+}
+
+.dp-tab-btn.active {
+    background-color: #701123;
+    color: #ffffff;
+    border-color: #701123;
+}
+
+.dp-lista-citas {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.dp-item-cita {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 14px 25px;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 2fr 1fr;
+    align-items: center;
+    font-size: 14px;
+}
+
+.dp-badge {
+    text-align: center;
+    padding: 6px 16px;
+    border-radius: 15px;
+    font-weight: 600;
+    justify-self: end;
+    font-size: 13px;
+}
+
+.dp-badge.confirmada {
+    background-color: #c7ebd7;
+    color: #2b5741;
+}
+
+.dp-badge.atendida {
+    background-color: #cbebfa;
+    color: #1b4958;
+}

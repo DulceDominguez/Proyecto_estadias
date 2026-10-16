@@ -1,0 +1,486 @@
+.pacientes-container {
+    padding: 30px;
+    background-color: #f7fafc;
+    min-height: 100vh;
+    font-family: sans-serif;
+}
+
+.pacientes-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.pacientes-title {
+    margin: 0;
+    font-size: 24px;
+    color: #1a1a1a;
+}
+
+.pacientes-fecha {
+    color: #666;
+    font-size: 14px;
+}
+
+.pacientes-subsections {
+    display: flex;
+    margin: 0 auto;
+    width: 65%;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.btn-agregar-paciente,
+.btn-volver {
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.pacientes-lista {
+    margin: 0 auto;
+
+    width: 65%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 12px;
+}
+
+.paciente-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 16px;
+}
+
+.paciente-info-basica {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.avatar-icon {
+    font-size: 20px;
+}
+
+.paciente-nombre {
+    font-weight: 500;
+    font-size: 15px;
+}
+
+.btn-ver {
+    background-color: #d1e7dd;
+    border: none;
+    padding: 6px 20px;
+    border-radius: 16px;
+    color: #0f5132;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* Estilos de la tarjeta de perfil e historial */
+.paciente-perfil-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    margin-bottom: 25px;
+}
+
+.perfil-avatar {
+    font-size: 50px;
+    background-color: #e3f2fd;
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.perfil-datos h3 {
+    margin: 0 0 8px 0;
+}
+
+.perfil-datos p {
+    margin: 4px 0;
+    color: #555;
+    font-size: 14px;
+}
+
+/* Estilos de las Pestañas (Tabs) */
+.tabs-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.tab-btn {
+    padding: 10px 24px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    background-color: #ffffff;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.tab-btn.active {
+    background-color: #71091d;
+    /* Tono guinda del diseño */
+    color: white;
+    border-color: #71091d;
+}
+
+.detalle-lista,
+.notas-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.detalle-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    border: 1px solid #e0e0e0;
+    border-radius: 16px;
+}
+
+.estatus-badge {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 13px;
+}
+
+.estatus-badge.confirmada {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+.estatus-badge.atendida {
+    background-color: #cff4fc;
+    color: #055160;
+}
+
+.nota-item {
+    padding: 12px;
+}
+
+.nota-fecha {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.nota-texto {
+    margin: 6px 0 0 0;
+    color: #444;
+    font-size: 14px;
+}
+
+/* Estilos para el formulario de Registro de Pacientes */
+.nuevo-paciente-container {
+    padding: 20px;
+}
+
+.nuevo-paciente-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.btn-flecha-back {
+    background: none;
+    border: none;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #000;
+}
+
+.nuevo-paciente-header h2 {
+    font-size: 22px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.form-paciente-card {
+    background-color: #f8fafc;
+    border-radius: 20px;
+    padding: 30px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.form-group.full-width {
+    width: 100%;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.form-group label {
+    font-size: 15px;
+    color: #222;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px 16px;
+    border: 1px solid #d0d7de;
+    border-radius: 12px;
+    font-size: 14px;
+    background-color: #ffffff;
+    outline: none;
+}
+
+.form-actions-paciente {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.btn-guardar-paciente {
+    background-color: #a8dfc1;
+    /* Verde menta exacto */
+    color: #1b4332;
+    border: none;
+    padding: 10px 28px;
+    border-radius: 20px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.btn-cancelar-paciente {
+    background-color: #d96b6c;
+    /* Rojo suave exacto */
+    color: #ffffff;
+    border: none;
+    padding: 10px 28px;
+    border-radius: 20px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+/* --- ESTILOS GENERALES DE PACIENTES --- */
+.pacientes-container {
+    position: relative;
+    padding: 20px;
+    font-family: sans-serif;
+}
+
+.pacientes-header {
+    margin-bottom: 20px;
+}
+
+.pacientes-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.pacientes-subsections {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.pacientes-subsections h3 {
+    font-size: 16px;
+    color: #475569;
+    margin: 0;
+}
+
+.btn-agregar-paciente {
+    background-color: #38bdf8;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn-agregar-paciente:hover {
+    background-color: #0284c7;
+}
+
+/* --- LISTA Y TARJETAS --- */
+.pacientes-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.paciente-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 14px 20px;
+    border-radius: 16px;
+}
+
+.paciente-info-basica {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.avatar-icon {
+    width: 40px;
+    height: 40px;
+    background-color: #e0e7ff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.paciente-nombre {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.btn-ver {
+    background-color: #38bdf8;
+    color: white;
+    border: none;
+    padding: 8px 24px;
+    border-radius: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-ver:hover {
+    background-color: #0284c7;
+}
+
+/* --- MODAL PARA AGREGAR PACIENTE --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: #ffffff;
+    padding: 24px;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 420px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.modal-title {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #1e293b;
+}
+
+.modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+    margin-bottom: 4px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    font-size: 14px;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.form-group input:focus {
+    border-color: #38bdf8;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.btn-modal-cancelar {
+    background-color: #f1f5f9;
+    color: #475569;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.btn-modal-cancelar:hover {
+    background-color: #e2e8f0;
+}
+
+.btn-modal-guardar {
+    background-color: #38bdf8;
+    color: #ffffff;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.btn-modal-guardar:hover {
+    background-color: #0284c7;
+}

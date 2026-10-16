@@ -1,0 +1,112 @@
+.contenedor-agenda {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+    /* Fondo gris claro similar a la imagen */
+    min-height: 80vh;
+}
+
+.titulo-calendario {
+    text-align: center;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+/* --- Selector de Fecha --- */
+.selector-fecha {
+    margin-bottom: 30px;
+}
+
+.boton-rojo {
+    background-color: #a33333;
+    /* Rojo del botón */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+}
+
+/* Ocultamos el input de fecha nativo debajo del texto del botón */
+.input-oculto {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* --- Cuadrícula de la Agenda --- */
+.agenda-diaria {
+    position: relative;
+    background: white;
+    border-radius: 10px;
+    padding: 20px 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.fila-hora {
+    display: flex;
+    height: 60px;
+    /* Cada hora mide 60px exactos de alto */
+}
+
+.etiqueta-hora {
+    width: 60px;
+    text-align: right;
+    padding-right: 15px;
+    font-size: 0.85rem;
+    color: #555;
+    transform: translateY(-8px);
+    /* Centra el texto con la línea */
+}
+
+.linea-divisoria {
+    flex: 1;
+    border-top: 1px solid #eaeaea;
+}
+
+/* --- Citas --- */
+.contenedor-citas {
+    position: absolute;
+    top: 20px;
+    /* Alineado con el inicio de las líneas divisorias */
+    left: 60px;
+    /* Respeta el ancho de las etiquetas de hora */
+    right: 20px;
+    height: 100%;
+    pointer-events: none;
+    /* Permite hacer clic a través si no tocas una tarjeta */
+}
+
+.tarjeta-cita-agenda {
+    position: absolute;
+    height: 35px;
+    background-color: #b2e2c6;
+    /* Verde menta claro */
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    color: #000;
+    pointer-events: auto;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Simulando columnas para que las citas no se encimen */
+.col-1 {
+    left: 5%;
+    width: 40%;
+}
+
+.col-2 {
+    left: 50%;
+    width: 40%;
+}

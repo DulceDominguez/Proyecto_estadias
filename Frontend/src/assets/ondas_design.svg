@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" preserveAspectRatio="none">
+  <!-- Capa trasera (Azul más claro) -->
+  <path fill="#cbeeff" d="M 0,600 C 300,500 550,400 800,100 L 800,600 L 0,600 Z" />
+  
+  <!-- Capa frontal (Azul más fuerte) -->
+  <path fill="#5bc8f5" d="M 150,600 C 400,550 650,450 800,250 L 800,600 L 150,600 Z" />
+</svg>
