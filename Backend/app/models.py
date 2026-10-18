@@ -20,7 +20,7 @@ class Paciente(Base):
     
     id = Column("id_paciente", Integer, primary_key=True, index=True, autoincrement=True)
     nombre = Column(String(150), nullable=False)
-    fecha_nacimiento = Column(Date, nullable=True)
+    edad = Column(Integer)
     telefono = Column(String(20), nullable=True)
 
 class Tratamiento(Base):
