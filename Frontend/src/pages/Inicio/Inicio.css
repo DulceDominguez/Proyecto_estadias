@@ -60,7 +60,21 @@ body {
     object-fit: contain;
 }
 
-.info p {
+
+.fila-cita {
+    display: flex;
+    flex-direction: row;
+    white-space: nowrap;
+    align-items: center;
+    gap: 40px;
+    width: 65%;
+    background-color: white;
+    border: 1px solid #000;
+    border-radius: 15px;
+    margin: 0 auto;
+}
+
+.fila-cita p {
     white-space: nowrap;
     font-size: 18px;
     color: black;
@@ -126,4 +140,74 @@ body {
     background-color: white;
     border: 1px solid #000;
     border-radius: 15px;
+}
+
+
+.citas-lista {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+    width: 65%;
+    height: auto;
+    margin: 0 auto;
+}
+
+
+.cita-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 16px;
+    background-color: #fff;
+}
+
+.cita-hora {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    min-width: 60px;
+}
+
+.cita-info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    margin-left: 20px;
+}
+
+.cita-paciente {
+    font-weight: bold;
+    font-size: 16px;
+    color: #222;
+}
+
+.cita-tratamiento {
+    font-size: 15px !important;
+    color: #666;
+    margin-top: 2px;
+}
+
+.cita-tratamiento small {
+    font-size: 15px !important;
+    color: #666;
+    margin-top: 2px;
+}
+
+.cita-estatus {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+}
+
+.cita-estatus.confirmada {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+.cita-estatus.pendiente {
+    background-color: #fff3cd;
+    color: #664d03;
 }

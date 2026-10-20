@@ -1,3 +1,5 @@
+@import url('https://fonts.cdnfonts.com/css/open-sauce-one');
+
 .contenedor-agenda {
     width: 100%;
     max-width: 1000px;
@@ -6,6 +8,49 @@
     background-color: #f8f9fa;
     /* Fondo gris claro similar a la imagen */
     min-height: 80vh;
+}
+
+.rbc-time-view .rbc-event {
+    box-sizing: border-box !important;
+    width: 50% !important;
+    margin-right: 0 !important;
+}
+
+/* Cambia el color de fondo y los bordes de la cajita de la cita */
+.rbc-event {
+    background-color: #3e95b2 !important;
+    border-radius: 6px;
+    border: none;
+    padding: 4px 6px;
+
+}
+
+/* Estilo para el nombre del paciente (que está dentro de la etiqueta <strong>) */
+.rbc-event strong {
+    font-size: 15px;
+    color: #e2e8f0;
+    display: block;
+    font-family: 'Open Sauce One', sans-serif;
+
+}
+
+/* Estilo para el texto del tratamiento */
+.rbc-event div div {
+    display: flex;
+    font-family: 'Open Sauce One', sans-serif;
+
+    flex-direction: row;
+    font-size: 14px;
+    color: #e2e8f0;
+    margin-top: 2px;
+    gap: 5px;
+}
+
+
+
+/* Opcional: añade un espacio pequeño mediante padding entre ambos eventos superpuestos */
+.rbc-event-content {
+    font-size: 0.85rem;
 }
 
 .titulo-calendario {

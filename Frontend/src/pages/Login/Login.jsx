@@ -11,18 +11,35 @@ export default function Login() {
     const [error, setError] = useState(false);
     const Navigate = useNavigate();
 
-    const manejarLogin = () => {
-        if (correo == 'admin@gmail.com' && contrasena == '1234') {
-            setError(false);
-            Navigate('/inicio');
-        } else {
-            setError(true);
+    const manejarLogin = async (e) => {
+        e.preventDefault()
+
+        try {
+            const respuesta = await fetch("http://localhost:8000/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ correo, contrasena })
+            });
+            const datos = await respuesta.json();
+            if (respuesta.ok) {
+                localStorage.setItem("token", datos.access_token);
+                Navigate('/inicio');
+            } else {
+                alert(datos.detail || "Error al iniciar sesion");
+            }
+
+
+        } catch (error) {
+            console.error("Error al conectar con el servidor ", error)
         }
+
     }
+
+
 
     return (
 
-        <div className="pantalla">
+        <form onSubmit={manejarLogin} className="pantalla">
             <div className="contenedor">
                 <div className='seccion_logo'>
                     <img src={Logo} className='logo_img' />
@@ -35,6 +52,8 @@ export default function Login() {
                         <Mail className='input_Icon' />
                         <input
                             type="email"
+                            id="email"         // <-- Agregado
+                            name="email"
                             placeholder="Correo"
                             className="input_text"
                             value={correo}
@@ -51,10 +70,11 @@ export default function Login() {
                             onChange={(e) => setContrasena(e.target.value)}
                         />
                     </div>
-                    <button onClick={manejarLogin}><p>Entrar</p></button>
+                    <button type="submit"><p>Entrar</p></button>
                 </div>
             </div>
 
-        </div >
+        </form >
     );
-}
+
+};

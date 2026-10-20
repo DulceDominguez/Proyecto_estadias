@@ -30,16 +30,7 @@
   }
 }
 
-body {
 
-  /* url('ruta_de_imagen') [coordenada X] [coordenada Y], cursor_de_respaldo */
-  cursor: url('./assets/icono_cursor.png'), auto;
-}
-
-.elemento {
-  /* El clic ocurre exactamente a los 16px horizontal y 16px vertical (el centro) */
-  cursor: url('./assets/icono_cursor.png') 16 16, auto;
-}
 
 @media (prefers-color-scheme: dark) {
   :root {

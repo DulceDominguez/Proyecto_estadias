@@ -4,7 +4,6 @@ from app.database import Base
 
 class Usuario(Base):
     __tablename__ = "usuarios"
-    
     id = Column("id_usuario", Integer, primary_key=True, index=True, autoincrement=True)
     correo = Column(String(150), unique=True, index=True, nullable=False)
     contrasena = Column("contrasena_hash", String(255), nullable=False)

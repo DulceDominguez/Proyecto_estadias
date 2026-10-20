@@ -7,13 +7,27 @@ from pydantic import BaseModel
 import re
 from app.database import get_db
 import app.models as models
+from dotenv import load_dotenv
+import os
+from datetime import datetime, timedelta
+from jose import jwt
+
+load_dotenv()
+
+SECRET_KEY=os.getenv("SECRET_KEY")
+ALGORITHM="HS256"
 
 app = FastAPI(title="Sistema de Agenda Dental", version="1.0")
+
+origins = [
+    "http://localhost:5173",  # El puerto habitual de Vite/React
+    "http://127.0.0.1:5173",
+]
 
 # Configuración de CORS para React
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -51,11 +65,47 @@ class CitaUpdate(BaseModel):
     notas: str | None = None
 
 
+class LoginRequest(BaseModel):
+    correo:str
+    contrasena:str
+
+
 # --- RUTAS PRINCIPALES ---
 
 @app.get("/")
 def leer_raiz():
     return {"mensaje": "¡El backend del sistema dental está funcionando correctamente!"}
+
+@app.post("/login")
+def iniciar_sesion(datos:LoginRequest,db:Session=Depends(get_db)):
+    usuario=db.query(models.Usuario).filter(models.Usuario.correo==datos.correo).first()
+    if not usuario:
+        raise HTTPException(
+            status_code=401,
+            detail="El correo electronico no esta regsitrado"
+        )
+
+    if usuario.contrasena !=datos.contrasena:
+        raise HTTPException(
+            status_code=401,
+            detail="Contraseña incorrecta"
+        )
+
+    tiempo_expiracion=datetime.utcnow()+timedelta(minutes=60)
+    payload={
+        "sub":str(usuario.id),
+        "correo":usuario.correo,
+        "exp":tiempo_expiracion
+    }
+
+    token_jwt=jwt.encode(payload,SECRET_KEY,algorithm=ALGORITHM)
+
+
+    return{
+        "mensaje":"¡Inicio de sesion exitoso",
+        "access_token":token_jwt,
+        "token_type":"bearer"
+    }
 
 @app.get("/test-db")
 def probar_conexion_db(db: Session = Depends(get_db)):
@@ -152,6 +202,30 @@ def obtener_citas(db: Session = Depends(get_db)):
             "tratamiento_id": c.tratamiento_id
         })
     return lista_citas
+
+
+@app.get("/calendario")
+def obtener_citas_calendario(db:Session=Depends(get_db)):
+    citas=db.query(models.Cita).all()
+    lista_citas=[]
+    for c in citas:
+        paciente=db.query(models.Paciente).get(c.paciente_id)
+        tratamiento=db.query(models.Tratamiento).get(c.tratamiento_id)
+
+        lista_citas.append({
+            "id":c.id,
+            "fecha":str(c.fecha),
+            "hora":str(c.hora)[:5],
+            "paciente":paciente.nombre if paciente else "Desconocido",
+            "paciente_id":c.paciente_id,
+            "tratamiento":tratamiento.nombre if tratamiento else "Desconocido",
+            "tratamiento_id":c.tratamiento_id
+
+        })
+    return lista_citas
+    
+
+
 
 
 # --- ENDPOINTS POST ---

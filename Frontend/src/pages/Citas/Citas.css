@@ -9,7 +9,7 @@
 
 .citas-container-new {
     padding: 30px;
-    background-color: #f7fafc;
+    background-color: transparent;
     min-height: 490px;
     width: 70%;
     font-family: sans-serif;
@@ -148,9 +148,12 @@
 
 /* Estilos para el formulario de Nueva Cita */
 .form-card {
-    background-color: #f3f4f4;
+    background-color: #d3e2ef;
+    /* #87a1ab  #a7bfc7  principal :#d3e2ef secundario:#bccbd8*/
+    /* rgb(162, 189, 198)  rgb(178, 203, 212)  rgb(190, 210, 218) rgb(198, 214, 220) rgb(207, 218, 222) rgb(190, 205, 210)-- rgb(159, 191, 201) rgb(182, 213, 224) */
     border-radius: 16px;
     padding: 24px;
+    color: #000000;
 }
 
 .form-title {
@@ -186,7 +189,7 @@
 }
 
 .form-field label {
-    font-size: 16px;
+    font-size: 18px;
     display: flex;
     justify-content: start;
     color: #333;
