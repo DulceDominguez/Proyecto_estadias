@@ -7,6 +7,7 @@ class Usuario(Base):
     id = Column("id_usuario", Integer, primary_key=True, index=True, autoincrement=True)
     correo = Column(String(150), unique=True, index=True, nullable=False)
     contrasena = Column("contrasena_hash", String(255), nullable=False)
+    nombre=Column("nombre",String(100),nullable=False)
 
 class Odontologo(Base):
     __tablename__ = "odontologos"
@@ -36,6 +37,7 @@ class Cita(Base):
     odontologo_id = Column("id_odontologo", Integer, ForeignKey("odontologos.id_odontologo"), nullable=False)
     tratamiento_id = Column("id_tratamiento", Integer, ForeignKey("tratamientos.id_tratamiento"), nullable=False)
     fecha = Column(Date, nullable=False)
-    hora = Column(Time, nullable=False)
+    hora_inicio = Column(Time, nullable=False)
     estatus = Column(String(20), nullable=False)
     notas = Column(Text, nullable=True)
+    hora_fin=Column(Time,nullable=False)

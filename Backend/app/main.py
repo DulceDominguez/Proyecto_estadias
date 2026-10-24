@@ -82,7 +82,7 @@ def iniciar_sesion(datos:LoginRequest,db:Session=Depends(get_db)):
     if not usuario:
         raise HTTPException(
             status_code=401,
-            detail="El correo electronico no esta regsitrado"
+            detail="El correo electronico no esta registrado"
         )
 
     if usuario.contrasena !=datos.contrasena:
@@ -141,7 +141,7 @@ def obtener_pacientes(db: Session = Depends(get_db)):
             
             obj_cita = {
                 "fecha": str(c.fecha),
-                "hora": str(c.hora)[:5],
+                "hora_inicio": str(c.hora_inicio)[:5],
                 "servicio": tratamiento.nombre if tratamiento else "Consulta",
                 "estado": c.estatus,
                 "notas": c.notas or ""
@@ -191,7 +191,7 @@ def obtener_citas(db: Session = Depends(get_db)):
         lista_citas.append({
             "id": c.id,
             "fecha": str(c.fecha),
-            "hora": str(c.hora)[:5],
+            "hora_inicio": str(c.hora_inicio)[:5],
             "estatus": c.estatus,
             "notas": c.notas,
             "paciente": paciente.nombre if paciente else "Desconocido",
@@ -202,6 +202,21 @@ def obtener_citas(db: Session = Depends(get_db)):
             "tratamiento_id": c.tratamiento_id
         })
     return lista_citas
+
+@app.get("/registro")
+def obtener_usuarios(db:Session=Depends (get_db)):
+    usuarios=db.query(models.Usuario).all()
+    lista_usuarios=[]
+    for u in usuarios:
+        lista_usuarios.append({
+            "id":u.id,
+            "correo":str(u.correo),
+            "contrasena":str(u.contrasena),
+            "nombre":str(u.nombre)
+        })
+
+    return lista_usuarios
+
 
 
 @app.get("/calendario")
@@ -215,7 +230,7 @@ def obtener_citas_calendario(db:Session=Depends(get_db)):
         lista_citas.append({
             "id":c.id,
             "fecha":str(c.fecha),
-            "hora":str(c.hora)[:5],
+            "hora_inicio":str(c.hora_inicio)[:5],
             "paciente":paciente.nombre if paciente else "Desconocido",
             "paciente_id":c.paciente_id,
             "tratamiento":tratamiento.nombre if tratamiento else "Desconocido",
@@ -264,7 +279,7 @@ def agendar_cita(cita: CitaCreate, db: Session = Depends(get_db)):
             odontologo_id=cita.id_odontologo,
             tratamiento_id=cita.id_tratamiento,
             fecha=cita.fecha,
-            hora=cita.hora,
+            hora_inicio=cita.hora_inicio,
             estatus=cita.estatus,
             notas=cita.notas
         )
@@ -292,8 +307,8 @@ def actualizar_cita(cita_id: int, cita_data: CitaUpdate, db: Session = Depends(g
             cita.tratamiento_id = cita_data.id_tratamiento
         if cita_data.fecha is not None:
             cita.fecha = cita_data.fecha
-        if cita_data.hora is not None:
-            cita.hora = cita_data.hora
+        if cita_data.hora_inicio is not None:
+            cita.hora_inicio = cita_data.hora_inicio
         if cita_data.estatus is not None:
             # Traduce automáticamente si llega en femenino a masculino
             estatus_db = cita_data.estatus

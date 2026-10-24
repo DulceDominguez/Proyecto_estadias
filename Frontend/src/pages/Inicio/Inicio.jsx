@@ -6,6 +6,8 @@ import Agenda from "../../assets/inicio_agenda.png";
 import Pacientes from "../../assets/inicio_paciente.png";
 import Citas_Pendientes from "../../assets/inicio_pendientes.png";
 import { User } from "lucide-react";
+import { useNavigate } from 'react-router-dom';
+
 
 
 export default function Inicio() {
@@ -13,8 +15,16 @@ export default function Inicio() {
   const [totalPacientes, setTotalPacientes] = useState(0);
   const [citasPendientes, setCitasPendientes] = useState(0);
   const [proximasCitas, setProximasCitas] = useState([]);
+  const navigate = useNavigate();
+
 
   useEffect(() => {
+
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      navigate("/login")
+    }
     const cargarResumenHoy = async () => {
       try {
         const token = localStorage.getItem("token");
@@ -101,7 +111,7 @@ export default function Inicio() {
         proximasCitas.map((cita) => (
           <div className="citas-lista">
             <div key={cita.id} className="cita-card">
-              <div className="cita-hora">{cita.hora}</div>
+              <div className="cita-hora">{cita.hora_inicio}</div>
               <div className="cita-info">
                 <span className="cita-paciente">{cita.paciente}</span>
                 <span className="cita-tratamiento">

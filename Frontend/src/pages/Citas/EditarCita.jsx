@@ -10,7 +10,7 @@ function EditarCita() {
   // Estados con los valores actuales de la cita
   const [paciente, setPaciente] = useState(citaAEditar.paciente || "");
   const [fecha, setFecha] = useState(citaAEditar.fecha || "2026-10-20");
-  const [hora, setHora] = useState(citaAEditar.hora || "10:00");
+  const [hora, setHora] = useState(citaAEditar.hora_inicio || "10:00");
   const [tratamientoId, setTratamientoId] = useState(
     citaAEditar.tratamiento_id || "",
   );
@@ -45,7 +45,7 @@ function EditarCita() {
       id_odontologo: parseInt(odontologoId),
       id_tratamiento: parseInt(tratamientoId),
       fecha: fecha,
-      hora: hora.length === 5 ? `${hora}:00` : hora,
+      hora_inicio: hora_inicio.length === 5 ? `${hora}:00` : hora_inicio,
       estatus: estatus,
       notas: notas,
     };

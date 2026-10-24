@@ -52,7 +52,7 @@ function NuevaCita() {
       id_odontologo: parseInt(odontologoId),
       id_tratamiento: parseInt(tratamientoId),
       fecha: fecha,
-      hora: hora.length === 5 ? `${hora}:00` : hora, // Asegurar formato HH:MM:SS
+      hora_inicio: hora_inicio.length === 5 ? `${hora}:00` : hora, // Asegurar formato HH:MM:SS
       estatus: estatus,
       notas: notas,
     };

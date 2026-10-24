@@ -318,7 +318,7 @@ function DetallePaciente() {
             datosPaciente.citas.map((cita, index) => (
               <div className="dp-item-cita" key={index}>
                 <span>📅 {cita.fecha}</span>
-                <span>⏰ {cita.hora}</span>
+                <span>⏰ {cita.hora_inicio}</span>
                 <span>🦷 {cita.servicio}</span>
                 <span className={`dp-badge ${cita.estado?.toLowerCase()}`}>
                   {cita.estado}
@@ -339,7 +339,7 @@ function DetallePaciente() {
       {tabActiva === "canceladas" && (
         <div className="dp-lista-citas">
           {datosPaciente.citasCanceladas &&
-          datosPaciente.citasCanceladas.length > 0 ? (
+            datosPaciente.citasCanceladas.length > 0 ? (
             datosPaciente.citasCanceladas.map((cita, index) => (
               <div className="dp-item-cita" key={index}>
                 <span>📅 {cita.fecha}</span>
