@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import logo from '../assets/logo.png';
 import icono_muela from '../assets/icono_muela.png';
 import { Home, CalendarCheck, CalendarDays, User, LogOut } from 'lucide-react';
+import MenuPerfil from '../pages/Perfil/Perfil.jsx';
 
 
 import './Navbar.css';
@@ -44,7 +45,9 @@ export default function Navbar() {
                     {obtenerFechaActual()}
                 </span>
 
-
+                <div className="perfil-wrapper">
+                    <MenuPerfil />
+                </div>
 
 
             </div>
@@ -77,10 +80,7 @@ export default function Navbar() {
                                 <User className='link-icono-user' />
                                 <span>Pacientes</span>
                             </Link>
-                            <Link to="/logout" onClick={toggleMenu} >
-                                <LogOut className='link-icono' />
-                                <span>Cerrar sesion</span>
-                            </Link>
+
 
                         </nav>
                     </div>

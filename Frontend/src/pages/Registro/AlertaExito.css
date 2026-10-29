@@ -1,0 +1,72 @@
+.alerta-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Fondo semi-oscuro */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    /* Se asegura de estar encima de todo, incluso de otros modales */
+}
+
+.alerta-caja {
+    background-color: white;
+    width: 90%;
+    max-width: 320px;
+    /* Tamaño ideal: visible pero no invasivo */
+    padding: 30px 20px;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    animation: aparecerAlerta 0.3s ease-out forwards;
+}
+
+.alerta-icono {
+    margin-bottom: 15px;
+}
+
+.alerta-titulo {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.alerta-mensaje {
+    color: #666;
+    margin: 10px 0 25px 0;
+    font-size: 1rem;
+}
+
+.alerta-btn {
+    background-color: #71091d;
+    /* Tu color morado/azul de preferencia */
+    color: white;
+    border: none;
+    padding: 10px 30px;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    width: 100%;
+}
+
+.alerta-btn:hover {
+    background-color: #71091d;
+}
+
+/* Animación para que aparezca suavemente */
+@keyframes aparecerAlerta {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}

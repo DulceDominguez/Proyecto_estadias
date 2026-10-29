@@ -1,16 +1,40 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./Citas.css";
+import AlertExito from '../Registro/AlertaExito';
+
 
 function EditarCita() {
   const location = useLocation();
   const navigate = useNavigate();
   const citaAEditar = location.state?.cita || {};
+  const [alertaExito, setAlertaExito] = useState(false);
 
-  // Estados con los valores actuales de la cita
+
+  // 1. Declaramos la función PRIMERO para que exista antes de usarse
+  const calcularDuracionEnMinutos = (horaInicioBD, horaFinBD) => {
+    if (!horaInicioBD || !horaFinBD) return "30";
+
+    const [hInicio, mInicio] = horaInicioBD.split(":").map(Number);
+    const [hFin, mFin] = horaFinBD.split(":").map(Number);
+
+    const totalMinutosInicio = (hInicio * 60) + mInicio;
+    const totalMinutosFin = (hFin * 60) + mFin;
+    const diferencia = totalMinutosFin - totalMinutosInicio;
+
+    return diferencia.toString();
+  };
+
+  // Estados con los valores iniciales de la cita
   const [paciente, setPaciente] = useState(citaAEditar.paciente || "");
   const [fecha, setFecha] = useState(citaAEditar.fecha || "2026-10-20");
-  const [hora, setHora] = useState(citaAEditar.hora_inicio || "10:00");
+  const [hora, setHora] = useState(citaAEditar.hora_inicio ? citaAEditar.hora_inicio.slice(0, 5) : "10:00");
+
+  // 2. Usamos la función directamente como valor inicial del estado (¡Adiós al setDuracion suelto!)
+  const [duracion, setDuracion] = useState(() =>
+    calcularDuracionEnMinutos(citaAEditar.hora_inicio, citaAEditar.hora_fin)
+  );
+
   const [tratamientoId, setTratamientoId] = useState(
     citaAEditar.tratamiento_id || "",
   );
@@ -41,13 +65,23 @@ function EditarCita() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Nota: aquí corregí 'hora_inicio' y 'hora_fin' para usar la variable 'hora' del estado y calcular lógicamente
+    const horaInicioFormateada = hora.length === 5 ? `${hora}:00` : hora;
+
+    // Si quieres calcular la hora fin sumando la duración seleccionada (en minutos):
+    const [h, m] = hora.split(":").map(Number);
+    const fechaBase = new Date();
+    fechaBase.setHours(h, m + parseInt(duracion), 0);
+    const horaFinFormateada = fechaBase.toTimeString().slice(0, 8); // Formato HH:MM:SS
+
     const citaActualizada = {
       id_odontologo: parseInt(odontologoId),
       id_tratamiento: parseInt(tratamientoId),
       fecha: fecha,
-      hora_inicio: hora_inicio.length === 5 ? `${hora}:00` : hora_inicio,
+      hora_inicio: horaInicioFormateada,
       estatus: estatus,
       notas: notas,
+      hora_fin: horaFinFormateada
     };
 
     try {
@@ -65,8 +99,8 @@ function EditarCita() {
       const resultado = await response.json();
 
       if (response.ok) {
-        alert("¡Cita actualizada correctamente!");
-        navigate("/citas");
+        setAlertaExito(true);
+
       } else {
         alert(
           "Error al actualizar: " + (resultado.detail || "Error desconocido"),
@@ -120,6 +154,19 @@ function EditarCita() {
                 value={hora}
                 onChange={(e) => setHora(e.target.value)}
               />
+            </div>
+            <div className="form-field">
+              <label>Duración</label>
+              <select
+                value={duracion}
+                onChange={(e) => setDuracion(e.target.value)}
+                required
+              >
+                <option value="30">30 minutos</option>
+                <option value="60">1 hora</option>
+                <option value="90">1 hora y media</option>
+                <option value="120">2 horas</option>
+              </select>
             </div>
           </div>
 
@@ -177,6 +224,15 @@ function EditarCita() {
             <button type="submit" className="btn-guardar">
               Guardar Cambios
             </button>
+            <AlertExito
+              isOpen={alertaExito}
+              mensaje="La cita se actualizado exitosamente en el sistema"
+              onClose={() => {
+                setAlertaExito(false);
+                navigate("/citas");
+
+              }}
+            />
           </div>
         </form>
       </div>

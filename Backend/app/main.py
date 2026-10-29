@@ -11,7 +11,8 @@ from dotenv import load_dotenv
 import os
 from datetime import datetime, timedelta
 from jose import jwt
-
+from passlib.context import CryptContext
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 load_dotenv()
 
 SECRET_KEY=os.getenv("SECRET_KEY")
@@ -52,7 +53,8 @@ class CitaCreate(BaseModel):
     id_odontologo: int
     id_tratamiento: int
     fecha: date
-    hora: time
+    hora_inicio: time
+    hora_fin:time
     estatus: str = "Pendiente"
     notas: str | None = None
 
@@ -60,14 +62,20 @@ class CitaUpdate(BaseModel):
     id_odontologo: int | None = None
     id_tratamiento: int | None = None
     fecha: date | None = None
-    hora: time | None = None
+    hora_inicio: time | None = None
     estatus: str | None = None
     notas: str | None = None
+    hora_fin:time | None = None
 
 
 class LoginRequest(BaseModel):
     correo:str
-    contrasena:str
+    contrasena_hash:str
+
+class newUsuario(BaseModel):
+    nombre:str
+    correo:str
+    contrasena_hash:str
 
 
 # --- RUTAS PRINCIPALES ---
@@ -85,7 +93,7 @@ def iniciar_sesion(datos:LoginRequest,db:Session=Depends(get_db)):
             detail="El correo electronico no esta registrado"
         )
 
-    if usuario.contrasena !=datos.contrasena:
+    if usuario.contrasena_hash != datos.contrasena_hash:
         raise HTTPException(
             status_code=401,
             detail="Contraseña incorrecta"
@@ -95,6 +103,7 @@ def iniciar_sesion(datos:LoginRequest,db:Session=Depends(get_db)):
     payload={
         "sub":str(usuario.id),
         "correo":usuario.correo,
+        "nombre":usuario.nombre,
         "exp":tiempo_expiracion
     }
 
@@ -106,6 +115,25 @@ def iniciar_sesion(datos:LoginRequest,db:Session=Depends(get_db)):
         "access_token":token_jwt,
         "token_type":"bearer"
     }
+
+@app.post("/usuarios")
+def crear_usuario(usuario:newUsuario,db:Session=Depends(get_db)):
+    try:
+        password_hasheada=pwd_context.hash(usuario.contrasena_hash)
+        nuevo_usuario=models.Usuario(
+            nombre=usuario.nombre,
+            correo=usuario.correo,
+            contrasena_hash=password_hasheada
+        )
+        db.add(nuevo_usuario)
+        db.commit()
+        db.refresh(nuevo_usuario)
+
+        return{"mensaje":"¡Usuario registrado con éxito!"}
+    except Exception as e:
+        db.rollback()
+        print("--- ERROR EXACTO ---", str(e))
+        raise HTTPException(status_code=400,detail=str(e))
 
 @app.get("/test-db")
 def probar_conexion_db(db: Session = Depends(get_db)):
@@ -199,11 +227,12 @@ def obtener_citas(db: Session = Depends(get_db)):
             "odontologo": odontologo.nombre if odontologo else "Desconocido",
             "odontologo_id": c.odontologo_id,
             "tratamiento": tratamiento.nombre if tratamiento else "Desconocido",
-            "tratamiento_id": c.tratamiento_id
+            "tratamiento_id": c.tratamiento_id,
+            "hora_fin": str(c.hora_fin)[:5]
         })
     return lista_citas
 
-@app.get("/registro")
+@app.get("/perfil")
 def obtener_usuarios(db:Session=Depends (get_db)):
     usuarios=db.query(models.Usuario).all()
     lista_usuarios=[]
@@ -234,7 +263,8 @@ def obtener_citas_calendario(db:Session=Depends(get_db)):
             "paciente":paciente.nombre if paciente else "Desconocido",
             "paciente_id":c.paciente_id,
             "tratamiento":tratamiento.nombre if tratamiento else "Desconocido",
-            "tratamiento_id":c.tratamiento_id
+            "tratamiento_id":c.tratamiento_id,
+            "hora_fin":str(c.hora_inicio)[:5]
 
         })
     return lista_citas
@@ -281,7 +311,8 @@ def agendar_cita(cita: CitaCreate, db: Session = Depends(get_db)):
             fecha=cita.fecha,
             hora_inicio=cita.hora_inicio,
             estatus=cita.estatus,
-            notas=cita.notas
+            notas=cita.notas,
+            hora_fin=cita.hora_fin
         )
         db.add(nueva_cita)
         db.commit()
@@ -309,6 +340,7 @@ def actualizar_cita(cita_id: int, cita_data: CitaUpdate, db: Session = Depends(g
             cita.fecha = cita_data.fecha
         if cita_data.hora_inicio is not None:
             cita.hora_inicio = cita_data.hora_inicio
+
         if cita_data.estatus is not None:
             # Traduce automáticamente si llega en femenino a masculino
             estatus_db = cita_data.estatus
@@ -317,6 +349,8 @@ def actualizar_cita(cita_id: int, cita_data: CitaUpdate, db: Session = Depends(g
             cita.estatus = estatus_db
         if cita_data.notas is not None:
             cita.notas = cita_data.notas
+        if cita_data.hora_fin is not None:
+            cita.hora_fin = cita_data.hora_fin
 
         db.commit()
         db.refresh(cita)

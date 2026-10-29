@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom'; // Para redireccionar
 
 export default function Login() {
     const [correo, setCorreo] = useState('');
-    const [contrasena, setContrasena] = useState('');
+    const [contrasena_hash, setContrasena] = useState('');
     const [error, setError] = useState(false);
     const Navigate = useNavigate();
 
@@ -18,7 +18,7 @@ export default function Login() {
             const respuesta = await fetch("http://localhost:8000/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ correo, contrasena })
+                body: JSON.stringify({ correo, contrasena_hash })
             });
             const datos = await respuesta.json();
             if (respuesta.ok) {
@@ -66,7 +66,7 @@ export default function Login() {
                             type="password"
                             placeholder="Contraseña"
                             className="input_text"
-                            value={contrasena}
+                            value={contrasena_hash}
                             onChange={(e) => setContrasena(e.target.value)}
                         />
                     </div>

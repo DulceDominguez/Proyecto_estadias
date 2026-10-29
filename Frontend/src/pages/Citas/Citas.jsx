@@ -79,7 +79,7 @@ function Citas() {
         <div className="citas-lista">
           {citasDelDia.map((cita) => (
             <div key={cita.id} className="cita-card">
-              <div className="cita-hora">{cita.hora_inicio}</div>
+              <div className="cita-hora">{cita.hora_inicio}-{cita.hora_fin}</div>
               <div className="cita-info">
                 <span className="cita-paciente">{cita.paciente}</span>
                 <span className="cita-tratamiento">

@@ -1,85 +1,96 @@
 import React, { useState, useEffect } from "react";
-import "./Citas.css";
-import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
+import "./Registro.css";
+import AlertExito from './AlertaExito';
 
-function Citas() {
-    const navigate = useNavigate();
-    const location = useLocation();
-    const [searchParams] = useSearchParams();
-    const filtro = searchParams.get("filtro"); // Detecta si viene ?filtro=hoy o ?filtro=pendientes
+export default function ModalAgregarUsuario({ isOpen, onClose }) {
+    const [nombre, setNombre] = useState("");
+    const [correo, setCorreo] = useState("");
+    const [contrasena, setContrasena] = useState("");
+    const [alertaExito, setAlertaExito] = useState(false);
 
-    const [Usuarios, setUsuarios] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [tituloSeccion, setTituloSeccion] = useState(
-        "Aquí tienes todas las citas registradas",
-    );
+    if (!isOpen) return null;
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
-    // Función para traer las citas del backend y aplicar filtros según la URL
-    const obtenerUsuarios = () => {
-        setLoading(true);
-        fetch("http://127.0.0.1:8000/registro")
-            .then((res) => res.json())
-            .then((data) => {
-                if (Array.isArray(data)) {
-                    setUsuarios(data);
+        const nuevoUsuarioData = {
+            nombre: nombre,
+            correo: correo,
+            contrasena_hash: contrasena
+        };
 
-                }
-                setLoading(false);
-            })
-            .catch((err) => {
-                console.error("Error al cargar los usuarios:", err);
-                setLoading(false);
+        try {
+            const response = await fetch("http://127.0.0.1:8000/usuarios", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(nuevoUsuarioData)
             });
+
+            if (response.ok) {
+                setAlertaExito(true);
+
+            } else {
+                alert("Error al registrar el paciente.");
+
+            }
+
+
+        } catch (error) {
+            console.error("Error de red", error);
+            alert("No se logro conectar con el servidor");
+        }
+
     };
 
-    // Se ejecuta al cargar la página, cambiar de ubicación o cambiar el filtro en la URL
-    useEffect(() => {
-        obtenerCitas();
-    }, [location, filtro]);
-
-    const handleConfirmar = (cita) => {
-        navigate("/editar-cita", { state: { cita } });
-    };
 
     return (
-        <div className="citas-container">
-            <div className="citas-subsections">
-                <h3>{tituloSeccion}</h3>
-                <button className="btn-agendar" onClick={() => navigate("/nueva-cita")}>
-                    + Agregar usuario
-                </button>
+        <div className="modal-overlay" onClick={onClose}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                <h2>Agregar Nuevo Usuario</h2>
+                <form className="modal-form" onSubmit={handleSubmit}>
+                    <input type="text"
+                        placeholder="Nombre completo "
+                        value={nombre}
+                        onChange={(e) => setNombre(e.target.value)}
+                        required
+                    />
+                    <input type="email"
+                        placeholder="Correo electrónico "
+                        value={correo}
+                        onChange={(e) => setCorreo(e.target.value)}
+                        required
+                    />
+                    <input type="password"
+                        placeholder="Contraseña"
+                        value={contrasena}
+                        onChange={(e) => setContrasena(e.target.value)}
+                        maxLength="72"
+                        required
+                    />
+                    <div className="modal-actions">
+                        <button type="button" className="btn-cancelar" onClick={onClose}>
+                            Cancelar
+                        </button>
+                        <button type="submit" className="btn-guardar">
+                            Guardar usuario
+                        </button>
+                        <AlertExito
+                            isOpen={alertaExito}
+                            mensaje="El usuario se ha registrado correctamente en el sistema"
+                            onClose={() => {
+                                setAlertaExito(false);
+                                onClose();
+                            }}
+                        />
+
+                    </div>
+
+                </form>
             </div>
 
-            {loading ? (
-                <p style={{ textAlign: "center", marginTop: "20px" }}>
-                    Cargando usuarios...
-                </p>
-            ) : Usuarios.length === 0 ? (
-                <p style={{ textAlign: "center", marginTop: "20px" }}>
-                    No hay usuarios.
-                </p>
-            ) : (
-                <div className="citas-lista usuarios-lista">
-                    {Usuarios.map((Usuario) => (
-                        <div key={Usuario.id} className="cita-card">
-                            <div className="cita-hora">{Usuario.nombre}</div>
-                            <div className="cita-info">
-                                <span className="cita-paciente">{Usuario.correo}</span>
-
-                            </div>
-
-                            <button
-                                className="btn-editar"
-                                onClick={() => handleConfirmar(cita)}
-                            >
-                                Editar
-                            </button>
-                        </div>
-                    ))}
-                </div>
-            )}
         </div>
     );
-}
 
-export default Citas;
+}

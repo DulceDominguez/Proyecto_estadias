@@ -58,7 +58,7 @@ export default function Inicio() {
           );
           setCitasPendientes(pendientesHoy.length);
 
-          setProximasCitas(citasDeHoy.slice(0, 3));
+          setProximasCitas(citasDeHoy);
         }
       } catch (error) {
         console.error("Error al cargar el resumen de hoy:", error);
@@ -111,7 +111,7 @@ export default function Inicio() {
         proximasCitas.map((cita) => (
           <div className="citas-lista">
             <div key={cita.id} className="cita-card">
-              <div className="cita-hora">{cita.hora_inicio}</div>
+              <div className="cita-hora">{cita.hora_inicio}-{cita.hora_fin}</div>
               <div className="cita-info">
                 <span className="cita-paciente">{cita.paciente}</span>
                 <span className="cita-tratamiento">

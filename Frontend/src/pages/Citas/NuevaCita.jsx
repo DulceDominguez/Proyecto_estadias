@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Citas.css";
+import AlertExito from '../Registro/AlertaExito';
+
 
 function NuevaCita() {
   const navigate = useNavigate();
 
   // Estados del formulario (guardando los IDs seleccionados)
+  const [alertaExito, setAlertaExito] = useState(false);
+
   const [pacienteId, setPacienteId] = useState("");
   const [odontologoId, setOdontologoId] = useState("");
   const [tratamientoId, setTratamientoId] = useState("");
@@ -13,11 +17,27 @@ function NuevaCita() {
   const [hora, setHora] = useState("10:00");
   const [estatus, setEstatus] = useState("Pendiente");
   const [notas, setNotas] = useState("");
+  const [duracion, setDuracion] = useState("30"); // <-- NUEVO ESTADO (En minutos)
 
   // Listas dinámicas que vienen de la BD
   const [pacientesBD, setPacientesBD] = useState([]);
   const [odontologosBD, setOdontologosBD] = useState([]);
   const [tratamientosBD, setTratamientosBD] = useState([]);
+
+  const calcularHoraFin = (horaInicio, duracionMinutos) => {
+    if (!horaInicio || !duracionMinutos) return "";
+    const [horas, minutos] = horaInicio.split(":").map(Number);
+
+    const totalMinutos = (horas * 60) + minutos + parseInt(duracionMinutos);
+
+    const nuevasHoras = Math.floor(totalMinutos / 60) % 24;
+    const nuevosMinutos = totalMinutos % 60;
+
+    return `${String(nuevasHoras).padStart(2, "0")}:${String(nuevosMinutos).padStart(2, "0")}`;
+  };
+
+  // Variable que guarda el resultado en tiempo real
+  const horaFin = calcularHoraFin(hora, duracion);
 
   // Cargar datos iniciales para los selectores al abrir la vista
   useEffect(() => {
@@ -52,9 +72,10 @@ function NuevaCita() {
       id_odontologo: parseInt(odontologoId),
       id_tratamiento: parseInt(tratamientoId),
       fecha: fecha,
-      hora_inicio: hora_inicio.length === 5 ? `${hora}:00` : hora, // Asegurar formato HH:MM:SS
+      hora_inicio: hora.length === 5 ? `${hora}:00` : hora, // Asegurar formato HH:MM:SS
       estatus: estatus,
       notas: notas,
+      hora_fin: `${horaFin}:00`
     };
 
     try {
@@ -69,8 +90,8 @@ function NuevaCita() {
       const resultado = await response.json();
 
       if (response.ok) {
-        alert("¡Cita agendada con éxito!");
-        navigate("/citas");
+        setAlertaExito(true);
+
       } else {
         alert(
           "Error al agendar: " + (resultado.detail || "Verifica los datos"),
@@ -115,7 +136,7 @@ function NuevaCita() {
             />
           </div>
           <div className="form-field">
-            <label>Hora</label>
+            <label>Hora inicio</label>
             <input
               type="time"
               value={hora}
@@ -123,7 +144,19 @@ function NuevaCita() {
               required
             />
           </div>
-
+          <div className="form-field">
+            <label>Duración</label>
+            <select
+              value={duracion}
+              onChange={(e) => setDuracion(e.target.value)} // <-- Cambiado a setDuracion
+              required
+            >
+              <option value="30">30 minutos</option>
+              <option value="60">1 hora</option>
+              <option value="90">1 hora y media</option>
+              <option value="120">2 horas</option>
+            </select>
+          </div>
           {/* Tipo de tratamiento dinámico */}
           <div className="form-field">
             <label>Tipo de tratamiento</label>
@@ -180,6 +213,15 @@ function NuevaCita() {
             <button type="submit" className="btn-guardar">
               Guardar
             </button>
+            <AlertExito
+              isOpen={alertaExito}
+              mensaje="La cita se ha registrado exitosamente en el sistema"
+              onClose={() => {
+                setAlertaExito(false);
+                navigate("/citas");
+
+              }}
+            />
           </div>
         </form>
       </div>
