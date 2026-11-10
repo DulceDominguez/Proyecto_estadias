@@ -46,13 +46,71 @@ const localizer = dateFnsLocalizer({
 });
 
 
-const EventoPerzonalizado = ({ event }) => {
-    return (
-        <div>
-            <strong>{event.paciente}</strong>
-            {event.tratamiento && <div>:  {event.tratamiento} </div>}
-        </div>
-    );
+const EventoPerzonalizado = ({ event, vistaActual }) => {
+
+    if (event.esResumen) {
+        return (
+            <div style={{ fontSize: '11px', whiteSpace: 'nowrap', overflow: 'hidden', color: 'white' }}>
+                {event.totalCitas} {event.totalCitas === 1 ? 'cita' : 'citas'}
+
+            </div >
+        );
+    }
+
+    if (vistaActual === 'day') {
+        return (
+            <div>
+                <strong>{event.paciente}</strong>
+                {event.tratamiento && <div>:  {event.tratamiento} </div>}
+            </div>
+        );
+    }
+
+
+};
+
+
+const esDiaInabil = (date) => {
+    const diaSemana = date.getDay();
+
+    if (diaSemana == 0) return true;
+
+    const fechaStr = format(date, 'yyyy-MM-dd');
+    const diasFestivos = [
+        '2026-12-25',
+        '2026-01-01',
+        '2026-11-02',
+        '2026-11-16',
+        '2026-12-31',
+        '2027-02-01',
+        '2027-02-05',
+        '2027-03-21',
+        '2027-04-01',
+        '2027-04-05',
+        '2027-09-16',
+        '2027-12-25',
+        '2027-01-01',
+        '2027-11-02',
+        '2027-11-16',
+        '2027-12-31',
+    ];
+
+    if (diasFestivos.includes(fechaStr)) return true;
+
+    return false;
+
+};
+
+const dayPropGetter = (date) => {
+    if (esDiaInabil(date)) {
+        return {
+            className: 'dia-inabil',
+            style: {
+                backgroundColor: '#f1f3f5'
+            },
+        };
+    }
+    return {};
 };
 
 
@@ -61,6 +119,7 @@ const EventoPerzonalizado = ({ event }) => {
 
 
 const Calendario = () => {
+
 
     const navigate = useNavigate();
 
@@ -78,7 +137,9 @@ const Calendario = () => {
 
     useEffect(() => {
         const obtenerCitas = async () => {
+
             try {
+
                 const token = localStorage.getItem("token");
                 const respuesta = await fetch("http://localhost:8000/calendario", {
                     method: "GET",
@@ -93,33 +154,65 @@ const Calendario = () => {
                     console.log("Datos del backend:", datosBackend); // 1. Para revisar qué nos manda FastAPI
 
                     if (datosBackend && Array.isArray(datosBackend)) {
+
+
+
+
                         const citasFormateadas = datosBackend
-                            .filter(cita => cita.fecha && cita.hora) // 2. Evita que truene si falta fecha u hora
+                            .filter(cita => cita.fecha && cita.hora_inicio) // 2. Evita que truene si falta fecha u hora
                             .map((cita) => {
                                 const [anio, mes, dia] = cita.fecha.split("-");
-                                const [hora, minuto] = cita.hora.split(":");
-
+                                const [hora, minuto] = cita.hora_inicio.split(":")
                                 const fechaInicio = new Date(anio, mes - 1, dia, hora, minuto);
+                                const [horaFin, minutoFin] = cita.hora_fin.split(":");
+                                const fechaFin = new Date(anio, mes - 1, dia, horaFin, minutoFin);
 
-                                const fechaFin = new Date(fechaInicio);
-                                fechaFin.setMinutes(fechaFin.getMinutes() + 30)
+
 
                                 return {
                                     id: cita.id,
-                                    tittle: `{cita.paciente||'Paciente}-${cita.tratamiento || 'Tratamiento'}`,
+                                    tittle: `${cita.paciente || 'Paciente'}-${cita.tratamiento || 'Tratamiento'}`,
                                     start: fechaInicio,
                                     end: fechaFin,
+                                    allDay: false,
                                     paciente: cita.paciente,
                                     tratamiento: cita.tratamiento,
                                 };
 
                             });
 
-                        setCitas(citasFormateadas);
+                        const conteoPorDia = {};
+                        datosBackend.forEach(cita => {
+                            if (cita.fecha) {
+                                conteoPorDia[cita.fecha] = (conteoPorDia[cita.fecha] || 0) + 1;
+                            }
+                        });
+
+
+
+                        const eventosResumen = Object.keys(conteoPorDia).map(fechaStr => {
+                            const [anio, mes, dia] = fechaStr.split("-");
+                            const fechaDia = new Date(anio, mes - 1, dia);
+
+                            return {
+                                id: `resumen-${fechaStr}`,
+                                tittle: `${conteoPorDia[fechaStr]} citas`,
+                                start: fechaDia,
+                                end: fechaDia,
+                                allDay: true,
+                                totalCitas: conteoPorDia[fechaStr],
+                                esResumen: true
+                            }
+                        })
+
+
+                        setCitas([...citasFormateadas, ...eventosResumen
+
+                        ]);
                     }
 
                 } else {
-                    console.error("Error al obtener las citas del servidor")
+                    console.log("Error al consultar todas las citas")
                 }
 
 
@@ -173,7 +266,9 @@ const Calendario = () => {
             marginBottom: '2px',
             border: '2px solid #ffffff', // Un borde blanco grueso separa visualmente las citas pegadas
 
-            padding: '5px',         // Un poco de espacio interno
+            padding: '2px 7px',
+            overflow: 'hidden',        // Evita desbordamientos extraños
+            // Un poco de espacio interno
 
         };
 
@@ -212,7 +307,7 @@ const Calendario = () => {
 
                 formats={{ eventTimeRangeFormat: () => "" }}
 
-                components={{ event: EventoPerzonalizado }}
+                components={{ event: (props) => <EventoPerzonalizado {...props} vistaActual={vistaActual} /> }}
 
                 views={['day', 'week', 'month']}
 
@@ -223,6 +318,9 @@ const Calendario = () => {
                 // Control de la fecha
 
                 date={fechaActual}
+
+
+                dayPropGetter={dayPropGetter}
 
                 onNavigate={(nuevaFecha) => setFechaActual(nuevaFecha)}
 

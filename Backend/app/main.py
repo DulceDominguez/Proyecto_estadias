@@ -11,8 +11,6 @@ from dotenv import load_dotenv
 import os
 from datetime import datetime, timedelta
 from jose import jwt
-from passlib.context import CryptContext
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 load_dotenv()
 
 SECRET_KEY=os.getenv("SECRET_KEY")
@@ -119,11 +117,10 @@ def iniciar_sesion(datos:LoginRequest,db:Session=Depends(get_db)):
 @app.post("/usuarios")
 def crear_usuario(usuario:newUsuario,db:Session=Depends(get_db)):
     try:
-        password_hasheada=pwd_context.hash(usuario.contrasena_hash)
         nuevo_usuario=models.Usuario(
             nombre=usuario.nombre,
             correo=usuario.correo,
-            contrasena_hash=password_hasheada
+            contrasena_hash=usuario.contrasena_hash
         )
         db.add(nuevo_usuario)
         db.commit()
@@ -209,7 +206,8 @@ def obtener_tratamientos(db: Session = Depends(get_db)):
 #CITAS#
 @app.get("/citas")
 def obtener_citas(db: Session = Depends(get_db)):
-    citas = db.query(models.Cita).all()
+    citas = db.query(models.Cita).order_by(models.Cita.fecha.desc(), models.Cita.hora_inicio.desc()).all()
+
     lista_citas = []
     for c in citas:
         paciente = db.query(models.Paciente).get(c.paciente_id)

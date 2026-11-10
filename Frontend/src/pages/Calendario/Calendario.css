@@ -1,5 +1,17 @@
 @import url('https://fonts.cdnfonts.com/css/open-sauce-one');
 
+/* Color de dias inhabiles */
+.dia-inabil {
+    background-color: #ffe3e3 !important;
+    opacity: 0.7;
+}
+
+.rbc-day-bg.dia-inabil {
+    background-color: #ffe3e3 !important;
+}
+
+
+
 .contenedor-agenda {
     width: 100%;
     max-width: 1000px;
@@ -22,20 +34,28 @@
     border-radius: 6px;
     border: none;
     padding: 4px 6px;
+    min-height: 30px !important;
+    /* Ajusta los píxeles a lo que consideres ideal */
+    align-items: center !important;
 
 }
 
 /* Estilo para el nombre del paciente (que está dentro de la etiqueta <strong>) */
 .rbc-event strong {
+    align-items: center !important;
+
     font-size: 15px;
     color: #e2e8f0;
-    display: block;
+    display: flex;
+    flex-direction: row;
     font-family: 'Open Sauce One', sans-serif;
 
 }
 
 /* Estilo para el texto del tratamiento */
 .rbc-event div div {
+
+
     display: flex;
     font-family: 'Open Sauce One', sans-serif;
 
