@@ -27,7 +27,6 @@ function DetallePaciente() {
     try {
       const response = await fetch("http://127.0.0.1:8000/pacientes");
       const data = await response.json();
-      // Buscamos al paciente actual en la lista general para traer sus citas actualizadas
       const pacienteActualizado = data.find((p) => p.id === pacienteId);
       if (pacienteActualizado) {
         setDatosPaciente(pacienteActualizado);

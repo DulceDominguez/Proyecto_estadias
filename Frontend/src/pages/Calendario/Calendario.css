@@ -175,3 +175,15 @@
     left: 50%;
     width: 40%;
 }
+
+
+.vista-day .rbc-time-view .rbc-event {
+    width: 50% !important;
+}
+
+/* En vista de SEMANA: recuadros casi al 100% */
+.vista-week .rbc-time-view .rbc-event {
+    width: 100% !important;
+    left: 2% !important;
+
+}

@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./Citas.css";
-import AlertExito from '../Registro/AlertaExito';
-
+import AlertExito from "../Registro/AlertaExito";
 
 function EditarCita() {
   const location = useLocation();
   const navigate = useNavigate();
   const citaAEditar = location.state?.cita || {};
   const [alertaExito, setAlertaExito] = useState(false);
-
 
   // 1. Declaramos la función PRIMERO para que exista antes de usarse
   const calcularDuracionEnMinutos = (horaInicioBD, horaFinBD) => {
@@ -18,28 +16,35 @@ function EditarCita() {
     const [hInicio, mInicio] = horaInicioBD.split(":").map(Number);
     const [hFin, mFin] = horaFinBD.split(":").map(Number);
 
-    const totalMinutosInicio = (hInicio * 60) + mInicio;
-    const totalMinutosFin = (hFin * 60) + mFin;
+    const totalMinutosInicio = hInicio * 60 + mInicio;
+    const totalMinutosFin = hFin * 60 + mFin;
     const diferencia = totalMinutosFin - totalMinutosInicio;
 
-    return diferencia.toString();
+    return diferencia > 0 ? diferencia.toString() : "30";
   };
 
   // Estados con los valores iniciales de la cita
   const [paciente, setPaciente] = useState(citaAEditar.paciente || "");
-  const [fecha, setFecha] = useState(citaAEditar.fecha || "2026-10-20");
-  const [hora, setHora] = useState(citaAEditar.hora_inicio ? citaAEditar.hora_inicio.slice(0, 5) : "10:00");
+  const [fecha, setFecha] = useState(
+    citaAEditar.fecha ? citaAEditar.fecha.slice(0, 10) : "2026-10-20"
+  );
+  const [hora, setHora] = useState(
+    citaAEditar.hora_inicio ? citaAEditar.hora_inicio.slice(0, 5) : "10:00"
+  );
 
-  // 2. Usamos la función directamente como valor inicial del estado (¡Adiós al setDuracion suelto!)
+  // Controla la carga inicial para no borrar la hora al entrar a editar
+  const [esCargaInicial, setEsCargaInicial] = useState(true);
+
+  // 2. Duración inicial calculada desde hora_inicio y hora_fin
   const [duracion, setDuracion] = useState(() =>
     calcularDuracionEnMinutos(citaAEditar.hora_inicio, citaAEditar.hora_fin)
   );
 
   const [tratamientoId, setTratamientoId] = useState(
-    citaAEditar.tratamiento_id || "",
+    citaAEditar.tratamiento_id ?? citaAEditar.id_tratamiento ?? ""
   );
   const [odontologoId, setOdontologoId] = useState(
-    citaAEditar.odontologo_id || "",
+    citaAEditar.odontologo_id ?? citaAEditar.id_odontologo ?? ""
   );
   const [estatus, setEstatus] = useState(citaAEditar.estatus || "Pendiente");
   const [notas, setNotas] = useState(citaAEditar.notas || "");
@@ -47,6 +52,28 @@ function EditarCita() {
   // Listas para los dropdowns
   const [odontologosBD, setOdontologosBD] = useState([]);
   const [tratamientosBD, setTratamientosBD] = useState([]);
+  const [horasDisponibles, setHorasDisponibles] = useState([]);
+
+  const [mensajeFechaCerrada, setMensajeFechaCerrada] = useState("");
+
+  // Función auxiliar para calcular hora fin (formato HH:MM)
+  const calcularHoraFin = (horaInicio, duracionMinutos) => {
+    if (!horaInicio || !duracionMinutos) return "";
+    const [horas, minutos] = horaInicio.split(":").map(Number);
+    const totalMinutos = horas * 60 + minutos + parseInt(duracionMinutos, 10);
+    const nuevasHoras = Math.floor(totalMinutos / 60) % 24;
+    const nuevosMinutos = totalMinutos % 60;
+    return `${String(nuevasHoras).padStart(2, "0")}:${String(
+      nuevosMinutos
+    ).padStart(2, "0")}`;
+  };
+
+  // Función auxiliar para pasar "HH:MM" a minutos totales
+  const convertirAMinutos = (horaStr) => {
+    if (!horaStr) return 0;
+    const [h, m] = horaStr.split(":").map(Number);
+    return h * 60 + m;
+  };
 
   useEffect(() => {
     // Cargar Odontólogos de la BD
@@ -62,26 +89,152 @@ function EditarCita() {
       .catch((err) => console.error("Error cargando tratamientos:", err));
   }, []);
 
+  useEffect(() => {
+    if (fecha) {
+      const [anio, mes, dia] = fecha.split("-").map(Number);
+      const fechaLocal = new Date(anio, mes - 1, dia);
+      const diaSemana = fechaLocal.getDay(); // 0 = Domingo
+      const esDomingo = diaSemana === 0;
+
+      // Lista de días festivos
+      const diasFestivos = [
+        "2026-12-25",
+        "2026-01-01",
+        "2026-11-02",
+        "2026-11-16",
+        "2026-12-31",
+        "2027-02-01",
+        "2027-02-05",
+        "2027-03-21",
+        "2027-04-01",
+        "2027-04-05",
+        "2027-09-16",
+        "2027-12-25",
+        "2027-01-01",
+        "2027-11-02",
+        "2027-11-16",
+        "2027-12-31",
+      ];
+      const esFestivo = diasFestivos.includes(fecha);
+
+      // Si es domingo o festivo, mostramos el aviso y bloqueamos las horas
+      if (esDomingo || esFestivo) {
+        setHorasDisponibles([]);
+        setMensajeFechaCerrada(
+          "⚠️ No hay citas disponibles: El consultorio permanece cerrado los domingos y días festivos."
+        );
+        return;
+      } else {
+        setMensajeFechaCerrada("");
+      }
+
+      // Si es un día hábil, consultamos las citas de la BD
+      fetch("http://127.0.0.1:8000/citas")
+        .then((res) => res.json())
+        .then((data) => {
+          // Excluir la cita actual y filtrar por fecha (y odontólogo si está seleccionado)
+          const citasDelDia = data.filter((cita) => {
+            const mismaFecha = cita.fecha.slice(0, 10) === fecha;
+            const noEsLaMismaCita = cita.id !== citaAEditar.id;
+            const citaOdontologoId = cita.odontologo_id ?? cita.id_odontologo;
+            const mismoOdontologo =
+              !odontologoId || String(citaOdontologoId) === String(odontologoId);
+
+            return mismaFecha && noEsLaMismaCita && mismoOdontologo;
+          });
+
+          const horariosOcupados = citasDelDia.map((cita) => ({
+            hora_inicio: cita.hora_inicio.slice(0, 5),
+            hora_fin: cita.hora_fin.slice(0, 5),
+          }));
+
+          // Horario base de la clínica
+          const horarioBase = [
+            "10:00",
+            "10:30",
+            "11:00",
+            "11:30",
+            "12:00",
+            "12:30",
+            "13:00",
+            "13:30",
+            "16:00",
+            "16:30",
+            "17:00",
+            "17:30",
+            "18:00",
+            "18:30",
+            "19:00",
+            "19:30",
+          ];
+
+          const esLunes = diaSemana === 1;
+          const odontologoEspecialId = "3";
+
+          const libres = horarioBase.filter((slotInicio) => {
+            // REGLA ESPECIAL: Si es lunes, la odontóloga Nora no atiende antes de las 4 pm
+            if (esLunes && String(odontologoId) === odontologoEspecialId) {
+              const horaEnMinutos = convertirAMinutos(slotInicio);
+              if (horaEnMinutos < convertirAMinutos("16:00")) {
+                return false;
+              }
+            }
+
+            const slotFin = calcularHoraFin(slotInicio, duracion);
+            const inicioMinutos = convertirAMinutos(slotInicio);
+            const finMinutos = convertirAMinutos(slotFin);
+
+            // Verificar que no se cruce con otro horario existente
+            const tieneCruce = horariosOcupados.some((cita) => {
+              const citaInicioMin = convertirAMinutos(cita.hora_inicio);
+              const citaFinMin = convertirAMinutos(cita.hora_fin);
+              return inicioMinutos < citaFinMin && finMinutos > citaInicioMin;
+            });
+
+            return !tieneCruce;
+          });
+
+          setHorasDisponibles(libres);
+        })
+        .catch((err) => console.error("Error cargando los horarios: ", err));
+    }
+  }, [fecha, odontologoId, duracion, citaAEditar.id]);
+
+  // 3. Conserva la hora inicial al entrar y la limpia solo si el usuario cambia y ya no está disponible
+  useEffect(() => {
+    if (esCargaInicial) {
+      if (horasDisponibles.length > 0) {
+        setEsCargaInicial(false);
+      }
+      return;
+    }
+
+    if (hora && !horasDisponibles.includes(hora)) {
+      setHora("");
+    }
+  }, [horasDisponibles, esCargaInicial, hora]);
+
+  // Asegura que la hora actual siga visible como opción si se está editando
+  const opcionesHora =
+    hora && !horasDisponibles.includes(hora)
+      ? [hora, ...horasDisponibles]
+      : horasDisponibles;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Nota: aquí corregí 'hora_inicio' y 'hora_fin' para usar la variable 'hora' del estado y calcular lógicamente
     const horaInicioFormateada = hora.length === 5 ? `${hora}:00` : hora;
-
-    // Si quieres calcular la hora fin sumando la duración seleccionada (en minutos):
-    const [h, m] = hora.split(":").map(Number);
-    const fechaBase = new Date();
-    fechaBase.setHours(h, m + parseInt(duracion), 0);
-    const horaFinFormateada = fechaBase.toTimeString().slice(0, 8); // Formato HH:MM:SS
+    const horaFinCorta = calcularHoraFin(hora, duracion);
+    const horaFinFormateada = `${horaFinCorta}:00`;
 
     const citaActualizada = {
-      id_odontologo: parseInt(odontologoId),
-      id_tratamiento: parseInt(tratamientoId),
+      id_odontologo: parseInt(odontologoId, 10),
+      id_tratamiento: parseInt(tratamientoId, 10),
       fecha: fecha,
       hora_inicio: horaInicioFormateada,
       estatus: estatus,
       notas: notas,
-      hora_fin: horaFinFormateada
+      hora_fin: horaFinFormateada,
     };
 
     try {
@@ -93,17 +246,16 @@ function EditarCita() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(citaActualizada),
-        },
+        }
       );
 
       const resultado = await response.json();
 
       if (response.ok) {
         setAlertaExito(true);
-
       } else {
         alert(
-          "Error al actualizar: " + (resultado.detail || "Error desconocido"),
+          "Error al actualizar: " + (resultado.detail || "Error desconocido")
         );
       }
     } catch (error) {
@@ -147,14 +299,33 @@ function EditarCita() {
                 onChange={(e) => setFecha(e.target.value)}
               />
             </div>
+
+            {/* Hora de inicio */}
             <div className="form-field">
-              <label>Hora</label>
-              <input
-                type="time"
+              <label>Hora de inicio disponible</label>
+              <select
                 value={hora}
                 onChange={(e) => setHora(e.target.value)}
-              />
+                required
+                disabled={Boolean(mensajeFechaCerrada)}
+              >
+                <option value="">Selecciona una hora disponible</option>
+                {opcionesHora.length === 0 ? (
+                  <option disabled>
+                    {mensajeFechaCerrada
+                      ? "Día no laborable"
+                      : "No hay horarios disponibles"}
+                  </option>
+                ) : (
+                  opcionesHora.map((h) => (
+                    <option key={h} value={h}>
+                      {h} (Fin: {calcularHoraFin(h, duracion)})
+                    </option>
+                  ))
+                )}
+              </select>
             </div>
+
             <div className="form-field">
               <label>Duración</label>
               <select
@@ -169,6 +340,12 @@ function EditarCita() {
               </select>
             </div>
           </div>
+
+          {mensajeFechaCerrada && (
+            <div className="form-field full-width">
+              <p className="mensaje-aviso">{mensajeFechaCerrada}</p>
+            </div>
+          )}
 
           {/* Tipo de tratamiento y Odontólogo dinámicos */}
           <div className="row">
@@ -226,11 +403,10 @@ function EditarCita() {
             </button>
             <AlertExito
               isOpen={alertaExito}
-              mensaje="La cita se actualizado exitosamente en el sistema"
+              mensaje="La cita se actualizó exitosamente en el sistema"
               onClose={() => {
                 setAlertaExito(false);
                 navigate("/citas");
-
               }}
             />
           </div>

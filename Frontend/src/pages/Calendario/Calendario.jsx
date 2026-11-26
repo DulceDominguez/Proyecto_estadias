@@ -20,7 +20,9 @@ import React, { useState, useEffect } from 'react';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 import './Calendario.css';
+import DetalleCita from '../Calendario/Detalles_citas.jsx';
 
+import DetalleCita2 from '../Calendario/Detalles_citas_week.jsx';
 
 
 const locales = {
@@ -47,13 +49,11 @@ const localizer = dateFnsLocalizer({
 
 
 const EventoPerzonalizado = ({ event, vistaActual }) => {
-
     if (event.esResumen) {
         return (
             <div style={{ fontSize: '11px', whiteSpace: 'nowrap', overflow: 'hidden', color: 'white' }}>
                 {event.totalCitas} {event.totalCitas === 1 ? 'cita' : 'citas'}
-
-            </div >
+            </div>
         );
     }
 
@@ -61,10 +61,21 @@ const EventoPerzonalizado = ({ event, vistaActual }) => {
         return (
             <div>
                 <strong>{event.paciente}</strong>
-                {event.tratamiento && <div>:  {event.tratamiento} </div>}
+                {event.tratamiento && <div>: {event.tratamiento}</div>}
             </div>
         );
     }
+
+    if (vistaActual === 'week') {
+        const primerNombre = event.paciente ? event.paciente.split(" ")[0] : "";
+        return (
+            <div style={{ fontSize: '12px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {primerNombre}
+            </div >
+        );
+    }
+
+    return null;
 
 
 };
@@ -177,33 +188,41 @@ const Calendario = () => {
                                     allDay: false,
                                     paciente: cita.paciente,
                                     tratamiento: cita.tratamiento,
+                                    odontologo: cita.odontologo,
+                                    notas: cita.notas,
+                                    estatus: cita.estatus,
+
                                 };
 
                             });
 
-                        const conteoPorDia = {};
+                        // En lugar de solo contar, agrupamos las citas completas por fecha
+                        const citasPorDia = {};
                         datosBackend.forEach(cita => {
                             if (cita.fecha) {
-                                conteoPorDia[cita.fecha] = (conteoPorDia[cita.fecha] || 0) + 1;
+                                if (!citasPorDia[cita.fecha]) {
+                                    citasPorDia[cita.fecha] = [];
+                                }
+                                citasPorDia[cita.fecha].push(cita);
                             }
                         });
 
-
-
-                        const eventosResumen = Object.keys(conteoPorDia).map(fechaStr => {
+                        const eventosResumen = Object.keys(citasPorDia).map(fechaStr => {
                             const [anio, mes, dia] = fechaStr.split("-");
                             const fechaDia = new Date(anio, mes - 1, dia);
+                            const listaCitas = citasPorDia[fechaStr];
 
                             return {
                                 id: `resumen-${fechaStr}`,
-                                tittle: `${conteoPorDia[fechaStr]} citas`,
+                                title: `${listaCitas.length} citas`, // (Corregido: es title, no tittle)
                                 start: fechaDia,
                                 end: fechaDia,
                                 allDay: true,
-                                totalCitas: conteoPorDia[fechaStr],
-                                esResumen: true
-                            }
-                        })
+                                totalCitas: listaCitas.length,
+                                esResumen: true,
+                                citasDelDia: listaCitas,
+                            };
+                        });
 
 
                         setCitas([...citasFormateadas, ...eventosResumen
@@ -228,12 +247,10 @@ const Calendario = () => {
 
 
 
+    const [citaSeleccionada, setCitaSeleccionada] = useState(null);
+
     const manejarClicCita = (evento) => {
-
-        // 'evento' contiene los datos de la cita que tocaste--> navigate(`/expediente/${evento.id}`);
-
-
-
+        setCitaSeleccionada(evento);
     };
 
 
@@ -243,6 +260,7 @@ const Calendario = () => {
         // Aquí puedes usar un color hexadecimal inspirado en el logo de Ortholife
 
         const backgroundColor = '#449dbf'; // Un azul médico/celeste
+
 
 
 
@@ -282,19 +300,26 @@ const Calendario = () => {
 
     };
 
+    let eventosVisibles;
+
+    if (vistaActual === 'month') {
+        eventosVisibles = citas.filter(evento => evento.esResumen);
+    } else {
+        eventosVisibles = citas;
+    }
 
 
 
 
     return (
 
-        <div className="contenedor-agenda">
+        <div className={`contenedor-agenda vista-${vistaActual}`}>
 
             <Calendar
 
                 localizer={localizer}
 
-                events={citas}
+                events={eventosVisibles}
 
                 startAccessor="start"
 
@@ -358,6 +383,11 @@ const Calendario = () => {
 
                 }}
 
+            />
+
+            <DetalleCita
+                cita={citaSeleccionada}
+                onClose={() => setCitaSeleccionada(null)}
             />
 
         </div>

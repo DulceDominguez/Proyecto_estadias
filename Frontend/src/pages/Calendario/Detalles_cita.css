@@ -1,0 +1,150 @@
+/* Fondo oscuro semitransparente que cubre toda la pantalla */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.45);
+    /* Transparencia oscura */
+    backdrop-filter: blur(3px);
+    /* Efecto borroso sutil atrás */
+    display: flex;
+    justify-content: start;
+    z-index: 1000;
+    /* Siempre encima del calendario */
+    padding: 15px;
+}
+
+/* Recuadro blanco centrado */
+.modal-contenido {
+    background-color: #ffffff;
+    width: 100%;
+    max-width: 420px;
+    max-height: 80vh;
+    /* Evita que se salga de la pantalla si hay muchas citas */
+    overflow-y: auto;
+    border-radius: 14px;
+    padding: 24px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+    animation: aparecerModal 0.2s ease-out;
+}
+
+
+.modal-contenido h3 {
+    margin-top: 0;
+    margin-bottom: 16px;
+    color: #449dbf;
+    font-size: 1.3rem;
+    border-bottom: 2px solid #f0f4f8;
+    padding-bottom: 10px;
+}
+
+.modal-contenido p {
+    margin: 8px 0;
+    color: #374151;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.modal-contenido strong {
+    color: #111827;
+}
+
+/* Botón de cerrar */
+.modal-contenido button {
+    margin-top: 20px;
+    width: 100%;
+    padding: 10px;
+    background-color: #a43b3b;
+
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.modal-contenido button:hover {
+    background-color: #a54b4b;
+
+}
+
+/* Animación suave al abrir */
+@keyframes aparecerModal {
+    from {
+        opacity: 0;
+        transform: scale(0.92);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+
+.cita-resumen-item {
+    border-bottom: 3px solid #cbd5e1;
+    /* Separador más ancho */
+    padding-bottom: 14px;
+    margin-bottom: 14px;
+}
+
+/* Quita la línea en la última cita para que no sobre abajo */
+.cita-resumen-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.cita-numero {
+    margin: 0 0 8px 0;
+    color: #449dbf;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.modal-header h3 {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-contenido .btn-cerrar-x {
+    background: transparent;
+    border: none;
+
+    font-size: 28px;
+    line-height: 1;
+    color: #666;
+    cursor: pointer;
+    padding: 0 4px;
+    margin: 0;
+    width: auto;
+    transition: color 0.2s ease;
+}
+
+.modal-button {
+    margin-left: 10px;
+    margin-bottom: 5px;
+}
+
+.modal-contenido .btn-cerrar-x:hover {
+    color: #a43b3b;
+
+    background: transparent;
+}

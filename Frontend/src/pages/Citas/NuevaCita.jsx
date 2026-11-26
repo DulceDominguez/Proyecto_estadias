@@ -116,13 +116,14 @@ function NuevaCita() {
           }));
 
           // Horario base de la clínica
-          const horarioBase = ["10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "16:00", "16:30", "17:00"];
+          const horarioBase = ["10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00",
+            "13:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30"];
 
           const esLunes = diaSemana === 1;
-          const odontologoEspecialId = "3"; // ID del odontólogo con horario especial los lunes
+          const odontologoEspecialId = "3";
 
           const libres = horarioBase.filter((slotInicio) => {
-            // REGLA ESPECIAL: Si es lunes, ese odontólogo específico no atiende en la mañana
+            // REGLA ESPECIAL: Si es lunes, la odontologa Nora no atiende una cita antes de las 4 pm
             if (esLunes && String(odontologoId) === odontologoEspecialId) {
               const horaEnMinutos = convertirAMinutos(slotInicio);
               if (horaEnMinutos < convertirAMinutos("16:00")) {
@@ -134,13 +135,13 @@ function NuevaCita() {
             const inicioMinutos = convertirAMinutos(slotInicio);
             const finMinutos = convertirAMinutos(slotFin);
 
-            // Verificar cruces con otras citas existentes
+            // Verificar que no se sobrescriba algun horario con oto existente 
             const tieneCruce = horariosOcupados.some((cita) => {
               const citaInicioMin = convertirAMinutos(cita.hora_inicio);
               const citaFinMin = convertirAMinutos(cita.hora_fin);
               return inicioMinutos < citaFinMin && finMinutos > citaInicioMin;
             });
-
+            //Si hay alguna sobreescritura de horario no permite su registro
             return !tieneCruce;
           });
 
@@ -227,7 +228,7 @@ function NuevaCita() {
           </div>
 
           {/* Fecha */}
-          <div className="form-field date full-width">
+          <div className="form-field date">
             <label>Fecha</label>
             <input
               type="date"
@@ -298,7 +299,7 @@ function NuevaCita() {
 
 
           {/* Tipo de tratamiento */}
-          <div className="form-field">
+          <div className="form-field full-width">
             <label>Tipo de tratamiento</label>
             <select
               value={tratamientoId}

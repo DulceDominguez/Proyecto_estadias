@@ -253,6 +253,8 @@ def obtener_citas_calendario(db:Session=Depends(get_db)):
     for c in citas:
         paciente=db.query(models.Paciente).get(c.paciente_id)
         tratamiento=db.query(models.Tratamiento).get(c.tratamiento_id)
+        odontologo=db.query(models.Odontologo).get(c.odontologo_id)
+
 
         lista_citas.append({
             "id":c.id,
@@ -262,7 +264,10 @@ def obtener_citas_calendario(db:Session=Depends(get_db)):
             "paciente_id":c.paciente_id,
             "tratamiento":tratamiento.nombre if tratamiento else "Desconocido",
             "tratamiento_id":c.tratamiento_id,
-            "hora_fin":str(c.hora_inicio)[:5]
+            "odontologo":odontologo.nombre if odontologo else "Desconocido",
+            "estatus":c.estatus,
+            "notas": c.notas,
+            "hora_fin":str(c.hora_fin)[:5]
 
         })
     return lista_citas
